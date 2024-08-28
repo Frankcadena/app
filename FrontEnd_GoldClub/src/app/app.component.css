@@ -1,0 +1,11 @@
+:root {
+    --primary-color: #00bcd4; /* Azul claro del fondo */
+    --secondary-color: #fff; /* Blanco del texto */
+    --text-color: #333; /* Gris oscuro para el texto */
+  }
+  
+  body {
+    font-family: 'Montserrat', sans-serif; /* Ejemplo de fuente */
+    background-color: var(--primary-color);
+    color: var(--text-color);
+  }
