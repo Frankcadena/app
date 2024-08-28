@@ -1,4 +1,4 @@
 export const environment = {
   production: false,
-  apiUrl: 'http://localhost:8080' // Dirección del backend
+  apiUrl: 'https://goldclub-production.up.railway.app' // Nueva dirección del backend
 };
