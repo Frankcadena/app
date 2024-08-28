@@ -49,7 +49,7 @@ public class SecurityConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("https://goldclubfrontend.up.railway.app") // URL del frontend
+                        .allowedOrigins("http://localhost:4200") // URL del frontend
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") // Métodos permitidos
                         .allowedHeaders("*") // Permite todos los headers
                         .allowCredentials(true); // Permite el envío de credenciales (como cookies o Authorization headers)
