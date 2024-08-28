@@ -32,15 +32,15 @@ export class RegisterComponent {
   onSubmit() {
     if (this.registerForm.valid) {
       // Llama al servicio para registrar al usuario
-      this.usuarioService.registrarUsuario(this.registerForm.value).subscribe(
-        () => {
+      this.usuarioService.registrarUsuario(this.registerForm.value).subscribe({
+        next: () => {
           this.router.navigate(['/login']); // Redirige al login después del registro exitoso
         },
-        error => {
+        error: (error: any) => {
           console.error('Error en el registro', error);
           this.errorMessage = 'Error en el registro. Intente nuevamente.'; // Muestra un mensaje de error al usuario
         }
-      );
+      });
     } else {
       this.errorMessage = 'Por favor complete el formulario correctamente.'; // Mensaje de validación
     }

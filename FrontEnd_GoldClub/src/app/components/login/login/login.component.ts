@@ -3,12 +3,11 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } 
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { UsuarioService } from '../../../services/usuario.service';
-import { HttpClientModule } from '@angular/common/http';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, HttpClientModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
@@ -31,18 +30,18 @@ export class LoginComponent {
   onSubmit() {
     if (this.loginForm.valid) {
       // Llama al servicio para autenticar al usuario
-      this.usuarioService.loginUsuario(this.loginForm.value).subscribe(
-        (token: string) => {
+      this.usuarioService.loginUsuario(this.loginForm.value).subscribe({
+        next: (token: string) => {
           // Guarda el token en el almacenamiento local
           localStorage.setItem('token', token);
           // Navega a la página de productos
           this.router.navigate(['/productos']);
         },
-        (error: any) => {
+        error: (error: any) => {
           // Muestra un mensaje de error si la autenticación falla
           console.error('Error de autenticación', error);
         }
-      );
+      });
     }
   }
 }

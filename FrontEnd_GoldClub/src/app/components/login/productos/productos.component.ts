@@ -22,25 +22,25 @@ export class ProductosComponent implements OnInit {
 
   // Método para cargar la lista de productos desde el servicio
   cargarProductos() {
-    this.productoService.listarProductos().subscribe(
-      (productos) => {
+    this.productoService.listarProductos().subscribe({
+      next: (productos: Producto[]) => {
         this.productos = productos;
       },
-      (error) => {
+      error: (error: any) => {
         console.error('Error cargando productos', error);
       }
-    );
+    });
   }
 
   // Método para eliminar un producto por su ID
   eliminarProducto(id: number) {
-    this.productoService.eliminarProducto(id).subscribe(
-      () => {
+    this.productoService.eliminarProducto(id).subscribe({
+      next: () => {
         this.cargarProductos(); // Refresca la lista de productos después de eliminar
       },
-      (error) => {
+      error: (error: any) => {
         console.error('Error eliminando producto', error);
       }
-    );
+    });
   }
 }
