@@ -1,7 +1,7 @@
 package com.example.goldClub.service;
 
-import com.example.goldClub.model.Usuario;
-import com.example.goldClub.repository.UsuarioRepository;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -9,7 +9,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+import com.example.goldClub.models.Usuario;
+import com.example.goldClub.repository.UsuarioRepository;
 
 @Service
 public class UsuarioService implements UserDetailsService {

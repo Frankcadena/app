@@ -13,6 +13,7 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.example.goldClub.security.JwtAuthenticationFilter;
+import com.example.goldClub.service.UsuarioService;
 
 @Configuration
 @EnableWebSecurity

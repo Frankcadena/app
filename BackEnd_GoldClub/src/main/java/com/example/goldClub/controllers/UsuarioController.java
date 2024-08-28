@@ -1,15 +1,18 @@
-package com.example.goldClub.controller;
+package com.example.goldClub.controllers;
 
-import com.example.goldClub.model.Usuario;
-import com.example.goldClub.security.JwtService;
-import com.example.goldClub.service.UsuarioService;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Optional;
+import com.example.goldClub.models.Usuario;
+import com.example.goldClub.security.JwtService;
+import com.example.goldClub.service.UsuarioService;
 
 @RestController
 @RequestMapping("/api/usuarios")

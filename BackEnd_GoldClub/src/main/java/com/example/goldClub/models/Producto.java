@@ -1,4 +1,4 @@
-package com.example.goldClub.model;
+package com.example.goldClub.models;
 
 import java.math.BigDecimal;
 
@@ -30,6 +30,8 @@ public class Producto {
 
     @Column(nullable = false)
     private int cantidad;
+    
+    // Getters y Setters
 
 	public Long getId() {
 		return id;
@@ -78,6 +80,5 @@ public class Producto {
 	public void setCantidad(int cantidad) {
 		this.cantidad = cantidad;
 	}
-    
-    
+	
 }

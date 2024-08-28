@@ -1,7 +1,9 @@
-package com.example.goldClub.model;
+package com.example.goldClub.models;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
@@ -9,21 +11,25 @@ import jakarta.persistence.Table;
 @Table(name = "usuarios")
 public class Usuario {
     @Id
-    @Column(name = "codigo_empleado", nullable = false, unique = true)
-    private Long codigoEmpleado;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @Column(nullable = false, unique = true)
     private String email;
 
+    @Column(name = "codigo_empleado", nullable = false, unique = true)
+    private int codigoEmpleado;
+
     @Column(nullable = false)
     private String password;
-
-	public Long getCodigoEmpleado() {
-		return codigoEmpleado;
+    
+    // Getters y Setters
+	public Long getId() {
+		return id;
 	}
 
-	public void setCodigoEmpleado(Long codigoEmpleado) {
-		this.codigoEmpleado = codigoEmpleado;
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public String getEmail() {
@@ -34,6 +40,14 @@ public class Usuario {
 		this.email = email;
 	}
 
+	public int getCodigoEmpleado() {
+		return codigoEmpleado;
+	}
+
+	public void setCodigoEmpleado(int codigoEmpleado) {
+		this.codigoEmpleado = codigoEmpleado;
+	}
+
 	public String getPassword() {
 		return password;
 	}
@@ -41,7 +55,5 @@ public class Usuario {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-
-	
     
 }

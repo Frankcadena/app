@@ -4,10 +4,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class BackEndGoldClubApplication {
+public class GoldClubApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(BackEndGoldClubApplication.class, args);
+		SpringApplication.run(GoldClubApplication.class, args);
 	}
 
 }

@@ -6,17 +6,13 @@ import java.util.function.Function;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
-import javax.crypto.spec.SecretKeySpec;
-import java.security.Key;
-
-
-import com.example.goldClub.model.Usuario;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import jakarta.servlet.http.HttpServletRequest;
 
+import com.example.goldClub.models.Usuario;
 
 @Service
 public class JwtService {
@@ -54,16 +50,13 @@ public class JwtService {
     }
 
     private String createToken(String subject) {
-        Key signingKey = new SecretKeySpec(secret.getBytes(), SignatureAlgorithm.HS256.getJcaName());
-
         return Jwts.builder()
                 .setSubject(subject)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10)) // 10 horas
-                .signWith(signingKey, SignatureAlgorithm.HS256)
+                .signWith(SignatureAlgorithm.HS256, secret.getBytes()) // Asegúrate de que la clave se pase en bytes
                 .compact();
     }
-
 
     public Boolean isTokenValid(String token) {
         final String username = extractUsername(token);
