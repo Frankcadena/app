@@ -48,8 +48,6 @@ export class ProductsComponent implements OnInit {
         alert('No autorizado. Redirigiendo al login...');
         this.router.navigate(['/login']);
       }
-    } else {
-      // No hacer nada si no estamos en el navegador
     }
   }
 
@@ -60,11 +58,15 @@ export class ProductsComponent implements OnInit {
         if (confirm('¿Estás seguro de que deseas eliminar este producto?')) {
           this.http.delete(`https://goldclub-production.up.railway.app/api/productos/${id}`, {
             headers: { Authorization: `Bearer ${token}` }
-          }).subscribe(() => {
-            this.products = this.products.filter(product => product.id !== id);
-            alert('Producto eliminado correctamente');
-          }, error => {
-            alert('Error al eliminar el producto. Intenta de nuevo más tarde.');
+          }).subscribe({
+            next: () => {
+              // Recargar la lista de productos sin recargar la página completa
+              this.loadProducts();
+            },
+            error: (error) => {
+              console.error('Error eliminando producto:', error);
+              alert('Error al eliminar el producto. Intenta de nuevo más tarde.');
+            }
           });
         }
       } else {
