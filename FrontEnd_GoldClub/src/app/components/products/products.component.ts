@@ -57,11 +57,20 @@ export class ProductsComponent implements OnInit {
       if (token) {
         if (confirm('¿Estás seguro de que deseas eliminar este producto?')) {
           this.http.delete(`https://goldclub-production.up.railway.app/api/productos/${id}`, {
-            headers: { Authorization: `Bearer ${token}` }
+            headers: { Authorization: `Bearer ${token}` },
+            responseType: 'text' // Asegurarse de recibir la respuesta como un string
           }).subscribe({
-            next: () => {
-              // Recargar la lista de productos sin recargar la página completa
-              this.loadProducts();
+            next: (response: string) => {
+              // Validar la respuesta
+              if (response === 'Producto eliminado exitosamente') {
+                // Actualizar la lista de productos localmente
+                this.products = this.products.filter(product => product.id !== id);
+                // Recargar la lista desde el servidor para asegurar consistencia
+                this.loadProducts();
+                alert(response); // Mostrar el mensaje recibido
+              } else {
+                alert('Error inesperado al eliminar el producto.');
+              }
             },
             error: (error) => {
               console.error('Error eliminando producto:', error);
