@@ -49,7 +49,7 @@ public class SecurityConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("https://goldclub-opw72sypd-emiliosz1708-gmailcoms-projects.vercel.app")
+                        .allowedOrigins("https://goldclubfrontend.vercel.app")
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*")
                         .allowCredentials(true); // Asegúrate de que esté habilitado
