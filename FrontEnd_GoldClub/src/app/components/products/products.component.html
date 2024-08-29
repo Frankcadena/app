@@ -1,0 +1,9 @@
+<h1>GOLD CLUB</h1>
+<div *ngIf="loading">Cargando productos...</div>
+<div *ngFor="let product of products">
+  <h2>{{ product.nombre }}</h2>
+  <p>{{ product.descripcion }}</p>
+  <p>Price: {{ product.precio | currency }}</p>
+  <p>Quantity: {{ product.cantidad }}</p>
+  <button (click)="eliminarProducto(product.id)">Delete</button>
+</div>

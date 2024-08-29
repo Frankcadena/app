@@ -1,0 +1,11 @@
+<h1>GOLD CLUB</h1>
+<form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+  <label for="email">Email</label>
+  <input id="email" formControlName="email" type="email" />
+  
+  <label for="password">Password</label>
+  <input id="password" formControlName="password" type="password" />
+  
+  <button type="submit">Sign In</button>
+  <button type="button" (click)="navigateToRegister()">Sign Up</button>
+</form>

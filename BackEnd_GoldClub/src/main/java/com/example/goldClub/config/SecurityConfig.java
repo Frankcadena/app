@@ -13,7 +13,6 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.example.goldClub.security.JwtAuthenticationFilter;
-import com.example.goldClub.service.UsuarioService;
 
 @Configuration
 @EnableWebSecurity
@@ -36,18 +35,24 @@ public class SecurityConfig {
                 .anyRequest().authenticated()
             )
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class) // Filtro JWT
-            .formLogin().disable();
+            .formLogin().disable()
+            .cors() // Asegúrate de incluir CORS aquí
+            .and()
+            .headers().frameOptions().disable(); // Deshabilitar para pruebas, si es necesario
 
         return http.build();
     }
 
-    // Configuración de CORS
     @Bean
     public WebMvcConfigurer corsConfigurer() {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/**").allowedOrigins("http://localhost:4200"); // Reemplazar con la URL del frontend
+                registry.addMapping("/**")
+                        .allowedOrigins("http://localhost:4200")
+                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                        .allowedHeaders("*")
+                        .allowCredentials(true); // Asegúrate de que esté habilitado
             }
         };
     }
