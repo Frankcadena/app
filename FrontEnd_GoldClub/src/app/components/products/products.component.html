@@ -8,13 +8,13 @@
 
   <div class="product-list">
     <div *ngFor="let producto of products" class="product-item">
-      <div class="product-details">
-        <span>{{ producto.nombre }}</span>
-        <span>{{ producto.precio | currency }}</span>
+      <div class="product-header">
+        <span class="product-name">{{ producto.nombre }}</span>
+        <span class="product-price">{{ producto.precio | currency }}</span>
       </div>
-      <div class="product-info">
+      <div class="product-description">
         <span>{{ producto.descripcion }}</span>
-        <span>{{ producto.cantidad }}</span>
+        <span class="product-quantity">Cantidad: {{ producto.cantidad }}</span>
       </div>
       <button (click)="eliminarProducto(producto.id)" class="delete-button">
         <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentColor">
