@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.HttpServletRequest;
 
 import com.example.goldClub.models.Usuario;
@@ -19,6 +20,17 @@ public class JwtService {
 
     @Value("${jwt.secret}")
     private String secret;
+
+    private byte[] secretKey;
+
+    public JwtService() {
+        // Configura la clave secreta de forma segura al crear el objeto JwtService
+        this.secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS256).getEncoded();
+    }
+
+    public void setSecret(String secret) {
+        this.secretKey = secret.getBytes();
+    }
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
@@ -33,9 +45,9 @@ public class JwtService {
         return claimsResolver.apply(claims);
     }
 
-    private Claims extractAllClaims(String token) {
+    Claims extractAllClaims(String token) {
         return Jwts.parserBuilder()
-                .setSigningKey(secret.getBytes()) // Asegúrate de que la clave se pase en bytes
+                .setSigningKey(secretKey)
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
@@ -54,7 +66,7 @@ public class JwtService {
                 .setSubject(subject)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10)) // 10 horas
-                .signWith(SignatureAlgorithm.HS256, secret.getBytes()) // Asegúrate de que la clave se pase en bytes
+                .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
     }
 
