@@ -1,11 +1,14 @@
-<h1>GOLD CLUB</h1>
-<form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-  <label for="email">Email</label>
-  <input id="email" formControlName="email" type="email" />
-  
-  <label for="password">Password</label>
-  <input id="password" formControlName="password" type="password" />
-  
-  <button type="submit">Sign In</button>
-  <button type="button" (click)="navigateToRegister()">Sign Up</button>
-</form>
+<div class="login-container">
+  <div class="login-form">
+    <h2 class="login-title">
+      <span class="title-part">GOLD</span>
+      <span class="title-part">CLUB</span>
+    </h2>
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <input formControlName="email" placeholder="email" class="login-input" />
+      <input formControlName="password" placeholder="Password" type="password" class="login-input" />
+      <button type="submit" class="login-button">SIGN IN</button>
+      <button type="button" (click)="navigateToRegister()" class="login-button">SIGN UP</button>
+    </form>
+  </div>
+</div>

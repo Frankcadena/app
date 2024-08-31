@@ -1,0 +1,74 @@
+.product-container {
+    background-color: #009688; /* Color de fondo */
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    height: 100vh; /* Ocupa toda la altura de la ventana */
+    background-image: url('../login/img/fondo\ \(1\).png'); /* Asegúrate de que la ruta de la imagen sea correcta */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.product-title {
+    font-size: 60px;
+    font-family: 'Love Ya Like A Sister', cursive;
+    color: black;
+    text-align: center; /* Centra el título */
+    margin-bottom: 40px;
+}
+
+.product-title .title-part {
+    display: block;
+    font-size: 100px; /* Ajusta el tamaño según lo necesites */
+}
+
+.loading-message {
+    color: white;
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 18px;
+}
+
+.product-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Ajusta a 2 columnas */
+    grid-gap: 20px;
+    overflow-y: auto; /* Permite desplazamiento vertical */
+    max-height: calc(100vh - 100px); /* Ajusta la altura máxima para dejar espacio al título y mensaje de carga */
+}
+
+.product-item {
+    background-color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    border-radius: 5px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.product-details,
+.product-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-right: 20px;
+}
+
+.product-details span:first-child,
+.product-info span:first-child {
+    font-weight: bold;
+    font-size: 16px;
+    margin-bottom: 5px;
+}
+
+.delete-button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+.delete-button svg {
+    fill: red;
+}
