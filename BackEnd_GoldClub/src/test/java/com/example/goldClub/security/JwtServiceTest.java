@@ -14,64 +14,61 @@ import java.util.Date;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
+//Clase de prueba para el servicio de JWT.
 public class JwtServiceTest {
 
-    @InjectMocks
-    private JwtService jwtService;
+ @InjectMocks
+ private JwtService jwtService; // Inyecta el servicio de JWT en el contexto de prueba.
 
-    @Mock
-    private Claims claims;
+ @Mock
+ private Claims claims; // Simula los claims de JWT.
 
-    private String secret = "thisisaverylongsecretkeyforjwtwhichneedstobesecure"; // Clave segura para pruebas
+ private String secret = "thisisaverylongsecretkeyforjwtwhichneedstobesecure"; // Clave secreta para pruebas.
 
-    @BeforeEach
-    public void setUp() {
-        MockitoAnnotations.openMocks(this);
-        // Configura el secret directamente en el JwtService
-        jwtService.setSecret(secret);
-    }
+ @BeforeEach
+ public void setUp() {
+     MockitoAnnotations.openMocks(this); // Inicializa los mocks.
+     jwtService.setSecret(secret); // Configura la clave secreta en el servicio.
+ }
 
-    @Test
-    public void testGenerateToken() {
-        Usuario usuario = new Usuario();
-        usuario.setEmail("test@example.com");
+ // Prueba para generar un token JWT.
+ @Test
+ public void testGenerateToken() {
+     Usuario usuario = new Usuario(); // Crea un usuario de prueba.
+     usuario.setEmail("test@example.com");
 
-        String token = jwtService.generateToken(usuario);
+     // Genera un token usando el servicio.
+     String token = jwtService.generateToken(usuario);
 
-        assertEquals("test@example.com", jwtService.extractUsername(token));
-    }
+     // Verifica que el token generado contenga el nombre de usuario correcto.
+     assertEquals("test@example.com", jwtService.extractUsername(token));
+ }
 
-    @Test
-    public void testIsTokenValid() {
-        Usuario usuario = new Usuario();
-        usuario.setEmail("test@example.com");
-        String token = jwtService.generateToken(usuario);
+ // Prueba para verificar si un token es válido.
+ @Test
+ public void testIsTokenValid() {
+     Usuario usuario = new Usuario(); // Crea un usuario de prueba.
+     usuario.setEmail("test@example.com");
+     String token = jwtService.generateToken(usuario); // Genera un token válido.
 
-        // Para `isTokenValid`, no necesitas mockear `jwtService` sino que debes crear un token válido y verificar su validez.
-        Date expirationDate = jwtService.extractExpiration(token); // Usa el método real para obtener la fecha de expiración.
+     // Usa el método real para verificar la validez del token.
+     boolean isValid = jwtService.isTokenValid(token);
 
-        // Simula la extracción de valores esperados
-        // No es necesario mockear `jwtService` aquí ya que estamos probando el método real.
-        boolean isValid = jwtService.isTokenValid(token);
+     // Verifica que el token sea válido.
+     assertEquals(true, isValid);
+ }
 
-        assertEquals(true, isValid);
-    }
+ // Prueba para extraer un claim de un token JWT.
+ @Test
+ public void testExtractClaim() {
+     Usuario usuario = new Usuario(); // Crea un usuario de prueba.
+     usuario.setEmail("test@example.com");
+     String token = jwtService.generateToken(usuario); // Genera un token de prueba.
 
-    @Test
-    public void testExtractClaim() {
-        Usuario usuario = new Usuario();
-        usuario.setEmail("test@example.com");
-        String token = jwtService.generateToken(usuario);
+     // Extrae el claim usando el servicio.
+     String email = jwtService.extractClaim(token, Claims::getSubject);
 
-        // En el caso de `extractClaim`, simplemente usa el método real.
-        Claims claims = Jwts.parserBuilder()
-                .setSigningKey(secret.getBytes())
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
-
-        String username = jwtService.extractClaim(token, Claims::getSubject);
-
-        assertEquals("test@example.com", username);
-    }
+     // Verifica que el claim extraído sea correcto.
+     assertEquals("test@example.com", email);
+ }
 }

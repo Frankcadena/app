@@ -18,70 +18,83 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
+//Clase de prueba para el controlador de usuarios.
 public class UsuarioControllerTest {
 
-    @Mock
-    private UsuarioService usuarioService;
+ @Mock
+ private UsuarioService usuarioService; // Simula el servicio de usuarios.
 
-    @Mock
-    private EmpleadoService empleadoService;
+ @Mock
+ private EmpleadoService empleadoService; // Simula el servicio de empleados.
 
-    @Mock
-    private JwtService jwtService;
+ @Mock
+ private JwtService jwtService; // Simula el servicio de JWT.
 
-    @Mock
-    private PasswordEncoder passwordEncoder; // Agrega el mock para PasswordEncoder
+ @Mock
+ private PasswordEncoder passwordEncoder; // Simula el codificador de contraseñas.
 
-    @InjectMocks
-    private UsuarioController usuarioController;
+ @InjectMocks
+ private UsuarioController usuarioController; // Inyecta el controlador de usuarios en el contexto de prueba.
 
-    @BeforeEach
-    public void setUp() {
-        MockitoAnnotations.openMocks(this);
-    }
+ @BeforeEach
+ public void setUp() {
+     MockitoAnnotations.openMocks(this); // Inicializa los mocks antes de cada prueba.
+ }
 
-    @Test
-    public void testRegistrarUsuario_Exitoso() {
-        Usuario usuario = new Usuario();
-        usuario.setCodigoEmpleado(123); // Configura un código de empleado válido
-        Empleado empleado = new Empleado();
-        
-        when(empleadoService.buscarPorCodigoEmpleado(usuario.getCodigoEmpleado())).thenReturn(Optional.of(empleado));
-        when(usuarioService.registrarUsuario(usuario)).thenReturn(usuario);
+ // Prueba para registrar un usuario exitosamente.
+ @Test
+ public void testRegistrarUsuario_Exitoso() {
+     Usuario usuario = new Usuario(); // Crea un usuario de prueba.
+     usuario.setCodigoEmpleado(123); // Asigna un código de empleado válido.
+     Empleado empleado = new Empleado(); // Crea un empleado de prueba.
 
-        ResponseEntity<Usuario> response = usuarioController.registrarUsuario(usuario);
+     // Simula el comportamiento de los servicios.
+     when(empleadoService.buscarPorCodigoEmpleado(usuario.getCodigoEmpleado())).thenReturn(Optional.of(empleado));
+     when(usuarioService.registrarUsuario(usuario)).thenReturn(usuario);
 
-        assertEquals(200, response.getStatusCodeValue(), "El código de estado HTTP debería ser 200");
-        assertEquals(usuario, response.getBody(), "El cuerpo de la respuesta debería ser el usuario registrado");
-    }
+     // Llama al método del controlador.
+     ResponseEntity<Usuario> response = usuarioController.registrarUsuario(usuario);
 
-    @Test
-    public void testLoginUsuario_Exitoso() {
-        Usuario usuario = new Usuario();
-        usuario.setEmail("julian@example.com");
-        usuario.setPassword("123456789");
-        String token = "testToken";
-        
-        when(usuarioService.buscarPorEmail(usuario.getEmail())).thenReturn(Optional.of(usuario));
-        when(passwordEncoder.matches(usuario.getPassword(), usuario.getPassword())).thenReturn(true); // Mockea el método matches
-        when(jwtService.generateToken(usuario)).thenReturn(token);
+     // Verifica que la respuesta tenga un código de estado 200 (OK) y contenga el usuario registrado.
+     assertEquals(200, response.getStatusCodeValue());
+     assertEquals(usuario, response.getBody());
+ }
 
-        ResponseEntity<String> response = usuarioController.loginUsuario(usuario);
+ // Prueba para el inicio de sesión exitoso de un usuario.
+ @Test
+ public void testLoginUsuario_Exitoso() {
+     Usuario usuario = new Usuario(); // Crea un usuario de prueba.
+     usuario.setEmail("julian@example.com");
+     usuario.setPassword("123456789");
+     String token = "testToken"; // Token de prueba.
 
-        assertEquals(200, response.getStatusCodeValue(), "El código de estado HTTP debería ser 200");
-        assertEquals(token, response.getBody(), "El cuerpo de la respuesta debería ser el token generado");
-    }
+     // Simula el comportamiento de los servicios.
+     when(usuarioService.buscarPorEmail(usuario.getEmail())).thenReturn(Optional.of(usuario));
+     when(passwordEncoder.matches(usuario.getPassword(), usuario.getPassword())).thenReturn(true);
+     when(jwtService.generateToken(usuario)).thenReturn(token);
 
-    @Test
-    public void testLoginUsuario_InvalidCredentials() {
-        Usuario usuario = new Usuario();
-        usuario.setEmail("julian@example.com");
-        
-        when(usuarioService.buscarPorEmail(usuario.getEmail())).thenReturn(Optional.empty());
+     // Llama al método del controlador.
+     ResponseEntity<String> response = usuarioController.loginUsuario(usuario);
 
-        ResponseEntity<String> response = usuarioController.loginUsuario(usuario);
+     // Verifica que la respuesta tenga un código de estado 200 (OK) y contenga el token generado.
+     assertEquals(200, response.getStatusCodeValue());
+     assertEquals(token, response.getBody());
+ }
 
-        assertEquals(401, response.getStatusCodeValue(), "El código de estado HTTP debería ser 401");
-        assertEquals("Credenciales incorrectas", response.getBody(), "El cuerpo de la respuesta debería ser el mensaje de error");
-    }
+ // Prueba para el inicio de sesión con credenciales incorrectas.
+ @Test
+ public void testLoginUsuario_InvalidCredentials() {
+     Usuario usuario = new Usuario(); // Crea un usuario de prueba.
+     usuario.setEmail("julian@example.com");
+
+     // Simula el comportamiento del servicio cuando no se encuentra el usuario.
+     when(usuarioService.buscarPorEmail(usuario.getEmail())).thenReturn(Optional.empty());
+
+     // Llama al método del controlador.
+     ResponseEntity<String> response = usuarioController.loginUsuario(usuario);
+
+     // Verifica que la respuesta tenga un código de estado 401 (No autorizado) y un mensaje de error.
+     assertEquals(401, response.getStatusCodeValue());
+     assertEquals("Credenciales incorrectas", response.getBody());
+ }
 }

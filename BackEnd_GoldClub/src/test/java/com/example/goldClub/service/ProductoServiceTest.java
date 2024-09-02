@@ -13,49 +13,59 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
+//Clase de prueba para el servicio de productos.
 public class ProductoServiceTest {
 
-    @Mock
-    private ProductoRepository productoRepository;
+ @Mock
+ private ProductoRepository productoRepository; // Simula el repositorio de productos.
 
-    @InjectMocks
-    private ProductoService productoService;
+ @InjectMocks
+ private ProductoService productoService; // Inyecta el servicio de productos en el contexto de prueba.
 
-    public ProductoServiceTest() {
-        MockitoAnnotations.openMocks(this);
-    }
+ public ProductoServiceTest() {
+     MockitoAnnotations.openMocks(this); // Inicializa los mocks.
+ }
 
-    @Test
-    public void testListarProductos() {
-        Producto producto = new Producto();
-        List<Producto> productos = Collections.singletonList(producto);
+ // Prueba para el método que lista todos los productos.
+ @Test
+ public void testListarProductos() {
+     Producto producto = new Producto(); // Crea un producto de prueba.
+     List<Producto> productos = Collections.singletonList(producto);
 
-        when(productoRepository.findAll()).thenReturn(productos);
+     // Simula el comportamiento del repositorio al listar productos.
+     when(productoRepository.findAll()).thenReturn(productos);
 
-        List<Producto> result = productoService.listarProductos();
+     // Llama al método del servicio.
+     List<Producto> result = productoService.listarProductos();
 
-        assertEquals(productos, result);
-        verify(productoRepository).findAll();
-    }
+     // Verifica que el resultado coincida con la lista de productos esperada.
+     assertEquals(productos, result);
+ }
 
-    @Test
-    public void testGuardarProducto() {
-        Producto producto = new Producto();
-        when(productoRepository.save(producto)).thenReturn(producto);
+ // Prueba para el método que guarda un producto.
+ @Test
+ public void testGuardarProducto() {
+     Producto producto = new Producto(); // Crea un producto de prueba.
 
-        Producto result = productoService.guardarProducto(producto);
+     // Simula el comportamiento del repositorio al guardar un producto.
+     when(productoRepository.save(producto)).thenReturn(producto);
 
-        assertEquals(producto, result);
-        verify(productoRepository).save(producto);
-    }
+     // Llama al método del servicio.
+     Producto result = productoService.guardarProducto(producto);
 
-    @Test
-    public void testEliminarProducto() {
-        Long id = 1L;
-        doNothing().when(productoRepository).deleteById(id);
+     // Verifica que el producto guardado coincida con el esperado.
+     assertEquals(producto, result);
+ }
 
-        productoService.eliminarProducto(id);
+ // Prueba para el método que elimina un producto.
+ @Test
+ public void testEliminarProducto() {
+     Long id = 1L; // ID del producto a eliminar.
 
-        verify(productoRepository).deleteById(id);
-    }
+     // Llama al método del servicio.
+     productoService.eliminarProducto(id);
+
+     // Verifica que se haya llamado al método deleteById del repositorio.
+     verify(productoRepository, times(1)).deleteById(id);
+ }
 }
