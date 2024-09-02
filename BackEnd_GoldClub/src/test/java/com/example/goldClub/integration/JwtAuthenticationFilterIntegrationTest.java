@@ -1,5 +1,6 @@
 package com.example.goldClub.integration;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -23,12 +24,29 @@ public class JwtAuthenticationFilterIntegrationTest {
     private TestRestTemplate restTemplate;
 
     private static final String BASE_URL = "https://goldclub-production.up.railway.app";
-    private static final String VALID_TOKEN = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c3VhcmlvQGNvcnJlby5jb20iLCJpYXQiOjE3MjUyNTg5NzMsImV4cCI6MTcyNTI5NDk3M30.8Q18OriZvClvlfTtBgt-wOh2qFhH72DUJ44oEhgx2aw";
+    private String validToken;
+
+    @BeforeEach
+    public void setUp() {
+        this.validToken = obtenerJwtToken();
+    }
+
+    private String obtenerJwtToken() {
+        String loginUrl = BASE_URL + "/api/usuarios/login";
+        String loginRequestJson = "{ \"email\": \"usuario@correo.com\", \"password\": \"password123\" }";
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(org.springframework.http.MediaType.APPLICATION_JSON);
+        HttpEntity<String> request = new HttpEntity<>(loginRequestJson, headers);
+
+        ResponseEntity<String> response = restTemplate.postForEntity(loginUrl, request, String.class);
+        return response.getBody(); // Retorna el token JWT de la respuesta
+    }
 
     @Test
     public void testAutenticacionJWT() {
         HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", "Bearer " + VALID_TOKEN);
+        headers.set("Authorization", "Bearer " + validToken);
         HttpEntity<String> entity = new HttpEntity<>(headers);
 
         ResponseEntity<String> response = restTemplate.exchange(
@@ -41,7 +59,6 @@ public class JwtAuthenticationFilterIntegrationTest {
     @Test
     public void testAccesoDenegadoSinJWT() {
         ResponseEntity<String> response = restTemplate.getForEntity(createURL("/api/productos"), String.class);
-
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
     }
 

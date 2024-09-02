@@ -19,15 +19,22 @@ import com.example.goldClub.models.Usuario;
 @Service
 public class JwtService {
 
-    @Value("${jwt.secret}")
-    private String secret; // La clave secreta desde el archivo de propiedades
+	@Value("${jwt.secret}")
+	private String secret; // La clave secreta desde el archivo de propiedades
 
-    private byte[] secretKey;
+	private byte[] secretKey;
 
-    @PostConstruct
-    public void init() {
-        // Configura la clave secreta al iniciar el servicio
-        this.secretKey = secret.getBytes();
+	@PostConstruct
+	public void init() {
+	    // Configurar la clave secreta en la inicialización del servicio
+	    this.secretKey = secret.getBytes();
+	}
+
+
+    // Setter for the secret, used in tests
+    public void setSecret(String secret) {
+        this.secret = secret;
+        this.secretKey = secret.getBytes(); // Update the byte array when the secret is set
     }
 
     public String extractUsername(String token) {
@@ -63,11 +70,11 @@ public class JwtService {
         return createToken(usuario.getEmail());
     }
 
-    private String createToken(String subject) {
+    public String createToken(String subject) {
         return Jwts.builder()
                 .setSubject(subject)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10)) // 10 horas
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10)) // 10 hours
                 .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
     }

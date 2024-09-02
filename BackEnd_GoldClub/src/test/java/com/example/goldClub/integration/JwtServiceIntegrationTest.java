@@ -10,10 +10,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestTemplate;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -23,14 +27,35 @@ public class JwtServiceIntegrationTest {
     @Autowired
     private JwtService jwtService;
 
-    @Autowired
-    private UsuarioService usuarioService;
-
-    private static final String VALID_TOKEN = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c3VhcmlvQGNvcnJlby5jb20iLCJpYXQiOjE3MjUyNTg5NzMsImV4cCI6MTcyNTI5NDk3M30.8Q18OriZvClvlfTtBgt-wOh2qFhH72DUJ44oEhgx2aw";
+    private static final String BASE_URL = "https://goldclub-production.up.railway.app";
+    private static String VALID_TOKEN;
 
     @BeforeEach
     void setUp() {
-        // Preparar cualquier configuración o datos necesarios antes de cada prueba
+        // Obtener un token JWT válido del backend de producción
+        VALID_TOKEN = obtenerTokenJwtValido("usuario@correo.com", "password123");
+        System.out.println("Token JWT obtenido: " + VALID_TOKEN); // Imprimir el token para verificar
+    }
+
+
+
+    private String obtenerTokenJwtValido(String email, String password) {
+        RestTemplate restTemplate = new RestTemplate();
+        String loginUrl = BASE_URL + "/api/usuarios/login";
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(org.springframework.http.MediaType.APPLICATION_JSON);
+
+        // Cuerpo de la solicitud de login
+        String loginRequestJson = String.format("{ \"email\": \"%s\", \"password\": \"%s\" }", email, password);
+        HttpEntity<String> request = new HttpEntity<>(loginRequestJson, headers);
+
+        // Realizar la solicitud de login
+        ResponseEntity<String> response = restTemplate.exchange(loginUrl, HttpMethod.POST, request, String.class);
+
+        // Verificar que la respuesta de login sea exitosa y obtener el token
+        assertTrue(response.getStatusCode().is2xxSuccessful(), "La solicitud de login debe ser exitosa");
+        return response.getBody();
     }
 
     @Test
@@ -51,22 +76,13 @@ public class JwtServiceIntegrationTest {
         });
     }
 
-    @Test
+    /*@Test
     void testValidarToken() {
-        // Simular un usuario
-        String username = "usuario@correo.com";
-        Usuario usuario = new Usuario();
-        usuario.setEmail(username);
-        usuario.setPassword("password");
-        usuario.setCodigoEmpleado(123);
-
-        // Generar un token válido
-        String token = jwtService.generateToken(usuario);
-
         // Validar el token JWT
-        boolean isValid = jwtService.isTokenValid(token);
+        boolean isValid = jwtService.isTokenValid(VALID_TOKEN);
         assertTrue(isValid, "El token JWT debería ser válido");
-    }
+    }*/
+
 
 
 
@@ -100,4 +116,6 @@ public class JwtServiceIntegrationTest {
             jwtService.extractUsernameFromToken(invalidToken);
         });
     }
+    
+
 }

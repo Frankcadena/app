@@ -23,8 +23,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest(classes = GoldClubApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ProductoControllerIntegrationTest {
 
-    private final String baseUrl = "https://goldclub-production.up.railway.app"; // Cambia la URL a la de tu backend en la nube
-    private final String token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJwYXVAZXhhbXBsZS5jb20iLCJpYXQiOjE3MjUyNTY2MjAsImV4cCI6MTcyNTI5MjYyMH0.E_9cugwxXyuExOh1je4-bi-NBbaGEtQfZMxRcSLInoo"; // Token JWT
+    private final String baseUrl = "https://goldclub-production.up.railway.app"; 
 
     @LocalServerPort
     private int port;
@@ -35,9 +34,24 @@ public class ProductoControllerIntegrationTest {
     @Autowired
     private ProductoRepository productoRepository;
 
+    private String token;
+
     @BeforeEach
     public void setUp() {
         productoRepository.deleteAll();
+        this.token = obtenerJwtToken(); // Generar un nuevo token antes de cada prueba
+    }
+
+    private String obtenerJwtToken() {
+        String loginUrl = baseUrl + "/api/usuarios/login";
+        String loginRequestJson = "{ \"email\": \"usuario@correo.com\", \"password\": \"password123\" }";
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(org.springframework.http.MediaType.APPLICATION_JSON);
+        HttpEntity<String> request = new HttpEntity<>(loginRequestJson, headers);
+
+        ResponseEntity<String> response = restTemplate.postForEntity(loginUrl, request, String.class);
+        return response.getBody(); // Retorna el token JWT de la respuesta
     }
 
     @Test
@@ -61,7 +75,6 @@ public class ProductoControllerIntegrationTest {
         assertThat(response.getBody()[0].getNombre()).isEqualTo("Producto 1");
     }
 
-
     @Test
     public void testEliminarProducto() {
         Producto producto = new Producto("Producto 3", "Descripción 3", new BigDecimal("30.00"));
@@ -82,4 +95,3 @@ public class ProductoControllerIntegrationTest {
         assertThat(productoRepository.findById(savedProducto.getId())).isEmpty();
     }
 }
-

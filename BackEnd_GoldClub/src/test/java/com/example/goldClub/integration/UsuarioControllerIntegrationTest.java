@@ -34,6 +34,8 @@ public class UsuarioControllerIntegrationTest {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    private final String BASE_URL = "https://goldclub-production.up.railway.app";
+
     @BeforeEach
     public void setUp() {
         usuarioRepository.deleteAll();
@@ -48,7 +50,7 @@ public class UsuarioControllerIntegrationTest {
 
         HttpEntity<Usuario> request = new HttpEntity<>(nuevoUsuario);
 
-        ResponseEntity<Usuario> response = restTemplate.postForEntity(createURL("/api/usuarios/registro"), request, Usuario.class);
+        ResponseEntity<Usuario> response = restTemplate.postForEntity(BASE_URL + "/api/usuarios/registro", request, Usuario.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody().getId()).isNotNull();
@@ -65,7 +67,7 @@ public class UsuarioControllerIntegrationTest {
         usuarioRepository.save(usuario);
 
         // Crea la solicitud de login
-        String loginUrl = createURL("/api/usuarios/login");
+        String loginUrl = BASE_URL + "/api/usuarios/login";
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(org.springframework.http.MediaType.APPLICATION_JSON);
         
@@ -73,7 +75,7 @@ public class UsuarioControllerIntegrationTest {
         String loginRequestJson = "{ \"email\": \"usuario@correo.com\", \"password\": \"password123\" }";
         HttpEntity<String> request = new HttpEntity<>(loginRequestJson, headers);
 
-        // Realiza la solicitud POST para login
+        // Realiza la solicitud POST para login al servidor de producción
         ResponseEntity<String> response = restTemplate.postForEntity(loginUrl, request, String.class);
 
         // Verifica que la respuesta de login sea exitosa y contiene el token
@@ -81,9 +83,5 @@ public class UsuarioControllerIntegrationTest {
         String jwtToken = response.getBody();
         assertThat(jwtToken).contains("eyJhbGciOiJIUzI1NiJ9"); // Verifica si contiene un token JWT válido
     }
-
-
-    private String createURL(String uri) {
-        return "http://localhost:" + port + uri;
-    }
 }
+
