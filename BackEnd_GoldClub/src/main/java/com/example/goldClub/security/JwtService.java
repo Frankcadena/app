@@ -11,6 +11,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
 
 import com.example.goldClub.models.Usuario;
@@ -19,16 +20,13 @@ import com.example.goldClub.models.Usuario;
 public class JwtService {
 
     @Value("${jwt.secret}")
-    private String secret;
+    private String secret; // La clave secreta desde el archivo de propiedades
 
     private byte[] secretKey;
 
-    public JwtService() {
-        // Configura la clave secreta de forma segura al crear el objeto JwtService
-        this.secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS256).getEncoded();
-    }
-
-    public void setSecret(String secret) {
+    @PostConstruct
+    public void init() {
+        // Configura la clave secreta al iniciar el servicio
         this.secretKey = secret.getBytes();
     }
 
@@ -38,6 +36,10 @@ public class JwtService {
 
     public Date extractExpiration(String token) {
         return extractClaim(token, Claims::getExpiration);
+    }
+
+    public String extractUsernameFromToken(String token) {
+        return extractClaim(token, Claims::getSubject);
     }
 
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {

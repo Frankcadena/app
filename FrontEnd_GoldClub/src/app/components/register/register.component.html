@@ -18,7 +18,7 @@
 
       <input formControlName="password" placeholder="Password" type="password" class="register-input" />
       <div *ngIf="registerForm.get('password')?.invalid && registerForm.get('password')?.touched">
-        <small>La contraseña debe tener al menos 6 caracteres</small>
+        <small>La contraseña debe tener al menos 4 caracteres</small>
       </div>
 
       <button type="submit" class="register-button">CHECK IN</button>

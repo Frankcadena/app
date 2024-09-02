@@ -3,14 +3,14 @@
     <span class="title-part">GOLD</span>
     <span class="title-part">CLUB</span>
   </h2>
-  
+
   <div *ngIf="loading" class="loading-message">Cargando productos...</div>
 
   <div class="product-list">
     <div *ngFor="let producto of products" class="product-item">
       <div class="product-header">
         <span class="product-name">{{ producto.nombre }}</span>
-        <span class="product-price">{{ producto.precio | currency }}</span>
+        <span class="product-price">{{ producto.precio | currency:'USD':'symbol':'1.0-0' }}</span>
       </div>
       <div class="product-description">
         <span>{{ producto.descripcion }}</span>

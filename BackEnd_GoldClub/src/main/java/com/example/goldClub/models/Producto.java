@@ -26,6 +26,18 @@ public class Producto {
     @Column(nullable = false)
     private int cantidad;
 
+    // Constructor adicional
+    public Producto(String nombre, String descripcion, BigDecimal precio) {
+        this.nombre = nombre;
+        this.descripcion = descripcion;
+        this.precio = precio;
+        this.referencia = ""; // Ajusta según tus necesidades
+        this.cantidad = 0;    // Ajusta este valor según tu lógica
+    }
+
+    // Constructor sin argumentos necesario para JPA
+    public Producto() {}
+
     // Getters y Setters
     public Long getId() {
         return id;
