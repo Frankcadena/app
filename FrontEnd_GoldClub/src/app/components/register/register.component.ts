@@ -18,7 +18,7 @@ export class RegisterComponent {
     this.registerForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       codigoEmpleado: ['', Validators.required],  // Ajuste de la clave para coincidir con el backend
-      password: ['', [Validators.required, Validators.minLength(7)]]
+      password: ['', [Validators.required, Validators.minLength(5)]]
     });
   }
 
